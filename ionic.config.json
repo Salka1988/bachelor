@@ -1,6 +1,8 @@
 {
   "name": "bachelor",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular",
   "id": "dfb5dbcf"
 }
