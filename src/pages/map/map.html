@@ -1,0 +1,119 @@
+<ion-header>
+  <ion-navbar>
+
+    <ion-title>
+      Town Map
+    </ion-title>
+
+    <ion-buttons end>
+
+      <button ion-button icon-only (click)='toggleSearch()'>
+        <ion-icon name="search"></ion-icon>
+      </button>
+
+      <button ion-button icon-only (click)='startNavigating()'>
+          <ion-icon name="arrow-dropright"></ion-icon>
+      </button>
+    </ion-buttons>
+
+
+  </ion-navbar>
+
+</ion-header>
+
+
+<div class="switch">
+  <button ion-button color="light" (click)="(switch = 'map'); resizeMap()" [class.active]="(switch == 'map')" icon-only><ion-icon name="map"></ion-icon></button>
+
+  <button ion-button color="light" (click)="(switch = 'list'); goTo()" [class.active]="(switch == 'list')" icon-only>
+  <ion-icon name="list"></ion-icon></button>
+
+  <button ion-button color="light" (click)="(switch = 'compass'); " [class.active]="(switch == 'compass')" icon-only>
+    <ion-icon name="md-compass"></ion-icon></button>
+
+
+
+</div>
+
+
+<ion-content>
+
+  <div [hidden]="!(switch == 'list')">
+<!--    <div *ngFor="let place of placesArray">-->
+<!--          <ion-card-content>-->
+<!--&lt;!&ndash;          <ion-card>&ndash;&gt;-->
+<!--            <ion-card-title>-->
+<!--              {{place.name}}-->
+<!--            </ion-card-title>-->
+<!--            <img src = "{{place.photos[0].getUrl()}}">-->
+<!--            <ion-row no-padding>-->
+<!--              <ion-col>-->
+<!--                <button ion-button clear small color="danger" icon-start>-->
+<!--                  <ion-icon name='star'></ion-icon>-->
+<!--                  Favorite-->
+<!--                </button>-->
+<!--              </ion-col>-->
+<!--              <ion-col text-center>-->
+<!--                <button ion-button clear small color="danger" icon-start>-->
+<!--                  <ion-icon name='musical-notes'></ion-icon>-->
+<!--                  Listen-->
+<!--                </button>-->
+<!--              </ion-col>-->
+<!--            </ion-row>-->
+<!--&lt;!&ndash;          </ion-card>&ndash;&gt;-->
+
+<!--          </ion-card-content>-->
+
+
+<!--    </div>-->
+    <ion-content class="cards-bg">
+      <ion-list>
+        <ion-item *ngFor="let item of (placesArray |async)?.slice().reverse()" text-wrap>
+          <ion-card tappable (click)="goTo()" class="cards-bg">
+            <img src="{{item.photos[0].getUrl()}}"/>
+            <ion-card-content>
+              <ion-card-title>
+                {{item.name}}
+              </ion-card-title>
+              <p>
+                {{item.name}}
+              </p>
+            </ion-card-content>
+          </ion-card>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+
+
+  </div>
+
+  <div [hidden]="!(switch == 'compass')">
+
+        <div>
+          <ion-card-content>
+            <div #directionsPanel></div>
+          </ion-card-content>
+        </div>
+
+  </div>
+
+
+  <div class="map" [class.hidemap]="!((switch == 'map') || error)">
+    <ion-searchbar #searchbar placeholder="Suchen" [hidden]="!search"></ion-searchbar>
+
+    <ion-buttons end>
+      <button ion-button round icon-only="ios-navigate-outline" [hidden]="!target" small>
+        <ion-icon name="ios-navigate-outline" ></ion-icon>
+      </button>
+
+    </ion-buttons>
+
+    <div id="map" #map></div>
+
+  </div>
+
+
+</ion-content>
+
+
+
