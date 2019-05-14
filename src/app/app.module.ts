@@ -13,9 +13,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { DeviceMotion, DeviceMotionAccelerationData} from "@ionic-native/device-motion";
 import { Gyroscope, GyroscopeOrientation, GyroscopeOptions } from '@ionic-native/gyroscope';
 import {DeviceOrientation} from "@ionic-native/device-orientation";
-import {PlacesPageModule} from "../pages/places/places.module";
 import {MapModulePageModule} from "../pages/map/map.module";
-import {AppRoutingModule, routingComponents} from "./app-routing.module";
 
 
 @NgModule({
@@ -25,11 +23,9 @@ import {AppRoutingModule, routingComponents} from "./app-routing.module";
   ],
   imports: [
     BrowserModule,
-    PlacesPageModule,
     MapModulePageModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
-    AppRoutingModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -44,7 +40,6 @@ import {AppRoutingModule, routingComponents} from "./app-routing.module";
     Gyroscope,
     DeviceOrientation,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    AppRoutingModule
   ]
 })
 export class AppModule { }

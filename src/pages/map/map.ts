@@ -12,7 +12,6 @@ import {DeviceOrientation, DeviceOrientationCompassHeading} from "@ionic-native/
 import { Observable } from 'rxjs/Observable';
 import { Storage } from '@ionic/storage';
 import { DeviceMotion, DeviceMotionAccelerationData, DeviceMotionAccelerometerOptions} from "@ionic-native/device-motion";
-import {PlacesPage} from "../places/places";
 
 declare var google: any;
 
@@ -29,8 +28,6 @@ export class MapPage implements OnInit{
   addressElement: HTMLInputElement = null;
 
   listSearch: string = '';
-  directionsService: any;
-  directionsDisplay: any;
 
   private originPlaceId: HTMLInputElement = null;
   private destinationPlaceId: HTMLInputElement = null;
@@ -65,6 +62,8 @@ export class MapPage implements OnInit{
   private placesArray: any = [];
   private locationOfMe: any;
 
+  directionsService: any;
+  directionsDisplay: any;
 
 //todo: Add location at th
 
@@ -91,63 +90,56 @@ export class MapPage implements OnInit{
 
 
 
-  ionViewDidLoad(){
-    this.findMe()
-  }
+  // ionViewDidLoad(){
+  // }
 
 
 
   ngOnInit() {
     // this.listenEvents();
-
-    this.findMe()
-
     // this.platform.ready().then(() => this.loadMaps());
     // this.desOfPlace = this.navParams.get('place');
-
   }
-
-
-  listenEvents(){
-    this.events.subscribe('reloadDetails',() => {
-      //call methods to refresh content
-    });
-  }
-
-
-
-
-
-
-
-
 
 
   startNavigating(){
 
     //todo: ispitati dali je sve ok u lat i lng
+
+
+
     if(this.originPlaceId)
     {
       this.navigating = true;
-
       console.log("222")
       console.log(this.originPlaceId)
     }
 
-    let directionsService = new google.maps.DirectionsService;
-    let directionsDisplay = new google.maps.DirectionsRenderer;
-    directionsDisplay.setMap(this.map);
+    this.search = false;
+    this.removeMarkers();
+    this.markers.pop();
 
-    directionsDisplay.setPanel(this.directionsPanel.nativeElement);
+    console.log(this.markers);
 
-    directionsService.route({
+    if(this.directionsDisplay)
+    {
+      this.directionsDisplay.setMap(null);
+      this.directionsDisplay.setPanel(document.getElementById('directionsPanel'));
+    }
+
+    this.directionsService = new google.maps.DirectionsService;
+    this.directionsDisplay = new google.maps.DirectionsRenderer;
+    this.directionsDisplay.setMap(this.map);
+    this.directionsDisplay.setPanel(this.directionsPanel.nativeElement);
+
+    this.directionsService.route({
       origin:  {lat: this.x.coords.latitude, lng: this.x.coords.longitude},
       destination: {lat: this.y.lat(), lng: this.y.lng()},
       travelMode: google.maps.TravelMode['WALKING']
     }, (res, status) => {
 
       if(status == google.maps.DirectionsStatus.OK){
-        directionsDisplay.setDirections(res);
+        this.directionsDisplay.setDirections(res);
       } else {
         console.warn(status);
       }
@@ -176,8 +168,6 @@ export class MapPage implements OnInit{
     }
   }
 
-
-
   findMe() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -188,6 +178,12 @@ export class MapPage implements OnInit{
     }
   }
 
+
+  removeMarkers(){
+    for(let i = 1; i < this.markers.length; i++){
+      this.markers[i].setMap(null);
+    }
+  }
 
   trackMe() {
     if (navigator.geolocation) {
@@ -230,6 +226,11 @@ export class MapPage implements OnInit{
     // this.currentLat = position.coords.latitude;
     // this.currentLong = position.coords.longitude;
 
+    if(!position)
+    {
+      console.log("dobar");
+    }
+
     let location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
     this.map.panTo(location);
 
@@ -245,7 +246,6 @@ export class MapPage implements OnInit{
           fillColor: "#48d7d8",
           fillOpacity: 0.4,
           strokeWeight: 0.4
-          // rotation: 20
         }
       });
 
@@ -293,9 +293,12 @@ export class MapPage implements OnInit{
       this.nearbyPlace();
     }
     else {
+
+      //todo provjeriti koliko se puta ponavlja ovaj marker i dali moze ovako
       this.markers.push(this.marker)
       this.marker.setPosition(location);
       this.nearbyPlace();
+      this.markers.pop()
 
       // this.marker.icon.rotation = parseInt(Math.random().toFixed(0));
 
@@ -335,32 +338,30 @@ export class MapPage implements OnInit{
     alert.present();
   }
 
-  mapsSearchBar(ev: any) {
-    // set input to the value of the searchbar
-    // this.search = ev.target.value;
-    console.log(ev);
-    const autocomplete = new google.maps.places.Autocomplete(ev);
-    autocomplete.bindTo('bounds', this.map);
-    return new Observable((sub: any) => {
-      google.maps.event.addListener(autocomplete, 'place_changed', () => {
-        const place = autocomplete.getPlace();
-        if (!place.geometry) {
-          sub.error({
-            message: 'Autocomplete returned place with no geometry'
-          });
-        } else {
-          sub.next(place.geometry.location);
-          sub.complete();
-        }
-      });
-    });
-  }
+  // mapsSearchBar(ev: any) {
+  //   // set input to the value of the searchbar
+  //   // this.search = ev.target.value;
+  //   console.log(ev);
+  //   const autocomplete = new google.maps.places.Autocomplete(ev);
+  //   autocomplete.bindTo('bounds', this.map);
+  //   return new Observable((sub: any) => {
+  //     google.maps.event.addListener(autocomplete, 'place_changed', () => {
+  //       const place = autocomplete.getPlace();
+  //       if (!place.geometry) {
+  //         sub.error({
+  //           message: 'Autocomplete returned place with no geometry'
+  //         });
+  //       } else {
+  //         sub.next(place.geometry.location);
+  //         sub.complete();
+  //       }
+  //     });
+  //   });
+  // }
 
   initAutocomplete(): void {
-    // reference : https://github.com/driftyco/ionic/issues/7223
 
     this.addressElement = this.searchbar.nativeElement.querySelector('.searchbar-input');
-
 
     this.createAutocomplete(this.addressElement).subscribe((location) => {
       console.log('Searchdata', location);
@@ -373,13 +374,7 @@ export class MapPage implements OnInit{
 
       console.log(this.placesArray)
 
-
       this.addPlaceMarker(location, "Mein gesuchter Standort");
-
-
-
-
-
     });
 
 
@@ -457,15 +452,6 @@ export class MapPage implements OnInit{
 
   //Center zoom
   //http://stackoverflow.com/questions/19304574/center-set-zoom-of-map-to-cover-all-visible-markers
-  bounceMap(markers) {
-    let bounds = new google.maps.LatLngBounds();
-
-    for (var i = 0; i < markers.length; i++) {
-      bounds.extend(markers[i].getPosition());
-    }
-
-    this.map.fitBounds(bounds);
-  }
 
   resizeMap() {
     setTimeout(() => {
@@ -634,7 +620,7 @@ export class MapPage implements OnInit{
 
     this.markers.push(this.placemarker);
 
-    this.map.setZoom(17);
+    this.map.setZoom(20);
     this.map.panTo(this.placemarker.position);
 
     this.addInfoWindow(this.placemarker, content);
@@ -666,96 +652,6 @@ export class MapPage implements OnInit{
   }
 
   /////////////////////////////////////////////////////////////////////////
-
-  AutocompleteDirectionsHandler(map) {
-    this.map = map;
-    this.originPlaceId = null;
-    this.destinationPlaceId = null;
-    this.travelMode = 'WALKING';
-    this.directionsService = new google.maps.DirectionsService;
-    this.directionsDisplay = new google.maps.DirectionsRenderer;
-    this.directionsDisplay.setMap(map);
-
-    var originInput = document.getElementById('origin-input');
-    var destinationInput = document.getElementById('destination-input');
-    var modeSelector = document.getElementById('mode-selector');
-
-    var originAutocomplete = new google.maps.places.Autocomplete(originInput);
-    // Specify just the place data fields that you need.
-    originAutocomplete.setFields(['place_id']);
-
-    var destinationAutocomplete = new google.maps.places.Autocomplete(destinationInput);
-    // Specify just the place data fields that you need.
-    destinationAutocomplete.setFields(['place_id']);
-
-    this.setupClickListener('changemode-walking', 'WALKING');
-    this.setupClickListener('changemode-transit', 'TRANSIT');
-    this.setupClickListener('changemode-driving', 'DRIVING');
-
-    this.setupPlaceChangedListener(originAutocomplete, 'ORIG');
-    this.setupPlaceChangedListener(destinationAutocomplete, 'DEST');
-
-    this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
-    this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
-      destinationInput);
-    this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
-
-  }
-  //
-  setupClickListener(id, mode) {
-    var radioButton = document.getElementById(id);
-    var me = this;
-    radioButton.addEventListener('click', function () {
-      me.travelMode = mode;
-      me.route();
-    });
-  };
-
-
-
-  setupPlaceChangedListener(autocomplete, mode) {
-    var me = this;
-    autocomplete.bindTo('bounds', this.map);
-    autocomplete.addListener('place_changed', function () {
-      var place = autocomplete.getPlace();
-      if (!place.place_id) {
-        window.alert('Please select an option from the dropdown list.');
-        return;
-      }
-      if (mode === 'ORIG') {
-        me.originPlaceId = place.place_id;
-      } else {
-        me.destinationPlaceId = place.place_id;
-      }
-      me.route();
-    });
-  };
-
-  route() {
-    if (!this.originPlaceId || !this.destinationPlaceId) {
-      return;
-    }
-    // var me = this;
-    this.directionsService.route(
-      {
-
-        origin: 'adelaide',
-        destination: 'adelaide oval',
-        travelMode: google.maps.TravelMode['WALKING']
-
-
-      },
-      function (response, status) {
-        if (status === 'OK') {
-          this.directionsDisplay.setDirections(response);
-        } else {
-          window.alert('Directions request failed due to ' + status);
-        }
-      });
-  };
-
-
-
 
   inputRoute(map) {
     const prompt = this.alertCtrl.create({
@@ -790,12 +686,15 @@ export class MapPage implements OnInit{
   }
 
 
-  goTo()
+  fun(position)
   {
-    this.nav.push(PlacesPage, { "parentPage": this });
+    this.switch = "map";
+    this.y = position.geometry.location;
+    this.addPlaceMarker(this.y,"To");
+
+
+    // this.startNavigating()
   }
 
-
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 }
