@@ -29,6 +29,12 @@ export class MapPage implements OnInit{
 
   listSearch: string = '';
 
+  arrayOfInterests: string[] = ["airport","bank","book_store","bus_station","cafe",
+    "gas_station","gym","hospital", "library",
+    "museum","parking","pharmacy","police",
+    "restaurant","shopping_mall","supermarket",
+    "subway_station","taxi_stand","train_station","zoo"];
+
   private originPlaceId: HTMLInputElement = null;
   private destinationPlaceId: HTMLInputElement = null;
 
