@@ -34,6 +34,8 @@ export class MapPage implements OnInit{
 
   private travelMode: string;
 
+  compas = true;
+
   map: any;
   marker: any;
   placemarker: any;
@@ -64,6 +66,7 @@ export class MapPage implements OnInit{
 
   directionsService: any;
   directionsDisplay: any;
+  private starttrackingButton: any;
 
 //todo: Add location at th
 
@@ -105,9 +108,6 @@ export class MapPage implements OnInit{
   startNavigating(){
 
     //todo: ispitati dali je sve ok u lat i lng
-
-
-
     if(this.originPlaceId)
     {
       this.navigating = true;
@@ -146,10 +146,13 @@ export class MapPage implements OnInit{
 
     });
 
+    this.compas = false;
+
   }
 
 
   nearbyPlace(){
+
     let service = new google.maps.places.PlacesService(this.map);
     service.nearbySearch({
       location: this.locationOfMe,
@@ -166,6 +169,11 @@ export class MapPage implements OnInit{
         this.placesArray.push(results[i]);
       }
     }
+  }
+
+  loog()
+  {
+    console.log("mo");
   }
 
   findMe() {
@@ -371,10 +379,13 @@ export class MapPage implements OnInit{
       };
       this.map.setOptions(options);
       console.log("BURGER KING");
-
       console.log(this.placesArray)
 
       this.addPlaceMarker(location, "Mein gesuchter Standort");
+
+      this.map;
+
+      this.starttrackingButton = true;
     });
 
 
@@ -566,6 +577,8 @@ export class MapPage implements OnInit{
           // });
           // alert.present();
 
+          ;
+
         });
       },
       (error) => {
@@ -691,7 +704,7 @@ export class MapPage implements OnInit{
     this.switch = "map";
     this.y = position.geometry.location;
     this.addPlaceMarker(this.y,"To");
-
+    this.starttrackingButton = true;
 
     // this.startNavigating()
   }

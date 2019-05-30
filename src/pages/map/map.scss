@@ -8,6 +8,15 @@ page-home {
     position: absolute!important;
     overflow: hidden!important;
   }
+
+
+  .start {
+    width: 100px;
+    margin: 50px;
+    padding: 50px;
+  }
+
+
   .currentitem {
     position: fixed;
     opacity: .8;
@@ -37,15 +46,11 @@ page-home {
     height: 100%
   }
 
+  .button {
 
-  //ion-card {
-  //  max-height: 200px;
-  //  overflow: scroll;
-  //  position: absolute;
-  //  z-index: 1;
-  //}
+    color: #387ef5;
 
-
+  }
 
   ion-searchbar {
     position: absolute;
@@ -66,10 +71,14 @@ page-home {
       background: #3366CC!important;
       color: #fff;
     }
+
     .button {
       width: 100px;
       margin: 0;
       padding: 0;
     }
+
+
+
   }
 }

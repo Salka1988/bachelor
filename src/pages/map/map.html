@@ -12,8 +12,12 @@
       </button>
 
       <button ion-button icon-only (click)='startNavigating()'>
-        <ion-icon name="arrow-dropright"></ion-icon>
+        <ion-icon name="ios-locate-outline"></ion-icon>
       </button>
+
+
+
+
     </ion-buttons>
 
 
@@ -24,20 +28,50 @@
 
 <div class="switch">
 
-  <button ion-button color="light" (click)="(switch = 'map'); resizeMap()" [class.active]="(switch == 'map')" icon-only><ion-icon name="map"></ion-icon></button>
+  <button ion-button color="light" (click)="(switch = 'map'); resizeMap()" [class.active]="(switch == 'map')" icon-only>
+    <ion-icon name="map"></ion-icon></button>
 
-  <button ion-button color="light" (click)="(switch = 'list');  " [class.active]="(switch == 'list')" icon-only>
+  <button ion-button color="light"  (click)="(switch = 'list');  " [class.active]="(switch == 'list')" icon-only>
     <ion-icon name="list"></ion-icon></button>
 
-  <button ion-button color="light" (click)="(switch = 'compass'); " [class.active]="(switch == 'compass')" icon-only>
+  <button ion-button color="light" [hidden]="compas" (click)="(switch = 'compass'); " [class.active]="(switch == 'compass')" icon-only>
     <ion-icon name="md-compass"></ion-icon></button>
+
+
+
+<!--  <button ion-button color="light" style="" icon-only>-->
+<!--    <ion-icon name="md-compass"></ion-icon>-->
+<!--  </button>-->
 
 </div>
 
 
+
+
 <ion-content>
 
+
   <div [hidden]="!(switch == 'list')">
+
+    <ion-card>
+
+      <ion-item>
+        <ion-label>Locations of interest</ion-label>
+        <ion-select multiple="true" cancelText="Cancel" okText="Ok!">
+          <ion-option value="bacon">Bacon</ion-option>
+          <ion-option value="olives">Black Olives</ion-option>
+          <ion-option value="xcheese">Extra Cheese</ion-option>
+          <ion-option value="peppers">Green Peppers</ion-option>
+          <ion-option value="mushrooms">Mushrooms</ion-option>
+          <ion-option value="onions">Onions</ion-option>
+          <ion-option value="pepperoni">Pepperoni</ion-option>
+          <ion-option value="pineapple">Pineapple</ion-option>
+          <ion-option value="sausage">Sausage</ion-option>
+          <ion-option value="Spinach">Spinach</ion-option>
+        </ion-select>
+      </ion-item>
+
+    </ion-card>
 
 
     <div *ngFor="let place of placesArray">
@@ -46,27 +80,27 @@
 
         <ion-card>
 
-        <ion-label >
-          {{place?.name}}
-        </ion-label>
+          <ion-label >
+            {{place?.name}}
+          </ion-label>
           <img class="card-img-top" src="{{place?.photos[0].getUrl()}}">
-        <div class="card-block">
-        </div>
+          <div class="card-block">
+          </div>
 
-      <ion-row no-padding>
-        <ion-col>
-          <button ion-button clear small color="danger" icon-start>
-            <ion-icon name='star'></ion-icon>
-            Favorite
-          </button>
-        </ion-col>
-        <ion-col text-center>
-          <button ion-button clear small color="danger" icon-start>
-            <ion-icon name='musical-notes'></ion-icon>
-            Listen
-          </button>
-        </ion-col>
-      </ion-row>
+          <ion-row no-padding>
+            <ion-col>
+              <button ion-button clear small color="danger" icon-start>
+                <ion-icon name='star'></ion-icon>
+                Favorite
+              </button>
+            </ion-col>
+            <ion-col text-center>
+              <button ion-button clear small color="danger" icon-start>
+                <ion-icon name='musical-notes'></ion-icon>
+                Listen
+              </button>
+            </ion-col>
+          </ion-row>
         </ion-card>
 
       </div>
@@ -86,16 +120,17 @@
 
 
   <div class="map" [class.hidemap]="!((switch == 'map') || error)">
+
+
+
+
     <ion-searchbar #searchbar placeholder="Suchen" [hidden]="!search"></ion-searchbar>
+    <div id="map" #map>
 
-    <ion-buttons end>
-      <button ion-button round icon-only="ios-navigate-outline" [hidden]="!target" small>
-        <ion-icon name="ios-navigate-outline" ></ion-icon>
-      </button>
 
-    </ion-buttons>
+    </div>
 
-    <div id="map" #map></div>
+
 
   </div>
 
