@@ -47,9 +47,7 @@ page-home {
   }
 
   .button {
-
     color: #387ef5;
-
   }
 
   ion-searchbar {
@@ -57,6 +55,7 @@ page-home {
     opacity: .7;
     z-index: 3;
   }
+
   .switch {
     position: fixed;
     bottom: 10px;
@@ -81,4 +80,35 @@ page-home {
 
 
   }
+
+
+  .trackerbuttons {
+    position: fixed;
+    top: 20%;
+    left: 120%;
+    transform: translate3d(-50%, -50%, 0);
+    width: 80%;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 100;
+    opacity: .9;
+    .active {
+      background: #3366CC!important;
+      color: #fff;
+    }
+
+    .button {
+      display:block;
+      height: 35px;
+      width: 35px;
+      border-radius: 50%;
+    }
+
+
+
+
+  }
+
+
+
 }

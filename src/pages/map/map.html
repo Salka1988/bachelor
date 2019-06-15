@@ -11,12 +11,11 @@
         <ion-icon name="search"></ion-icon>
       </button>
 
-      <button ion-button icon-only (click)='startNavigating()'>
-        <ion-icon name="ios-locate-outline"></ion-icon>
+
+
+      <button ion-button icon-only *ngIf="starttrackingButton" (click)= 'startNavigating()'>
+        <ion-icon name="ios-arrow-dropright"></ion-icon>
       </button>
-
-
-
 
     </ion-buttons>
 
@@ -37,15 +36,7 @@
   <button ion-button color="light" [hidden]="compas" (click)="(switch = 'compass'); " [class.active]="(switch == 'compass')" icon-only>
     <ion-icon name="md-compass"></ion-icon></button>
 
-
-
-<!--  <button ion-button color="light" style="" icon-only>-->
-<!--    <ion-icon name="md-compass"></ion-icon>-->
-<!--  </button>-->
-
 </div>
-
-
 
 
 <ion-content>
@@ -55,16 +46,16 @@
 
     <ion-card>
 
-
       <ion-item>
-        <ion-label>Locations of interest</ion-label>
-        <ion-select  multiple="true" cancelText="Cancel" okText="Ok!">
+        <ion-label>Places</ion-label>
 
-          <ion-option *ngFor="let place of arrayOfInterests" >
+        <ion-select [(ngModel)]="addInterest" (ionChange)="nearbyPlace($event)">
+
+          <ion-option *ngFor="let place of arrayOfInterests">
             {{place}}
           </ion-option>
-
         </ion-select>
+
       </ion-item>
 
     </ion-card>
@@ -74,26 +65,22 @@
 
       <div *ngIf="place" (click)="fun(place)">
 
-        <ion-card>
+        <ion-card >
 
-          <ion-label >
+          <ion-label *ngIf="place.name != 0">
             {{place?.name}}
           </ion-label>
-          <img class="card-img-top" src="{{place?.photos[0].getUrl()}}">
+
+          <img class="card-img-top" *ngIf="place?.photos[0].getUrl().value != 0" src="{{place?.photos[0].getUrl()}}">
+
           <div class="card-block">
           </div>
 
           <ion-row no-padding>
             <ion-col>
               <button ion-button clear small color="danger" icon-start>
-                <ion-icon name='star'></ion-icon>
-                Favorite
-              </button>
-            </ion-col>
-            <ion-col text-center>
-              <button ion-button clear small color="danger" icon-start>
-                <ion-icon name='musical-notes'></ion-icon>
-                Listen
+                <ion-icon ></ion-icon>
+                Show
               </button>
             </ion-col>
           </ion-row>
